@@ -8,12 +8,13 @@ import React from 'react';
         icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
       }[];
       setActivePage: (page: string | null) => void;
+      columns?: number;
     }
 
-    const SubMenu: React.FC<SubMenuProps> = ({ isOpen, items, setActivePage }) => {
+    const SubMenu: React.FC<SubMenuProps> = ({ isOpen, items, setActivePage, columns = 1 }) => {
       return isOpen ? (
-        <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-          <ul>
+        <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10 w-64 max-h-[350px] overflow-y-auto">
+          <ul className="p-4">
             {items.map((item, index) => (
               <li className="mb-2" key={index}>
                 <button

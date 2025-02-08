@@ -221,6 +221,7 @@ import React from 'react';
                     isOpen={openSubMenu === 'paramètres'}
                     items={paramètresItems}
                     setActivePage={setActivePage}
+                    columns={2}
                   />
                 </li>
               </ul>
