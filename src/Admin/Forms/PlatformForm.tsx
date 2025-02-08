@@ -34,11 +34,11 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ platform, onSave, onCancel 
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div className="mt-3 text-center">
+      <div className="relative top-20 mx-auto p-5 border shadow-lg rounded-xl bg-white w-96">
+        <div className="mt-3">
           <div className="flex justify-between items-center">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              {platform ? 'Modifier la Plateforme' : 'Ajouter une Plateforme'}
+              {platform ? 'Ajouter une Plateforme' : 'Modifier la Plateforme'}
             </h3>
             <button
               onClick={onCancel}
@@ -49,9 +49,9 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ platform, onSave, onCancel 
           </div>
           <div className="px-7 py-3">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
-                  Nom de la Plateforme:
+              <div className="mt-4">
+                <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+                  Nom
                 </label>
                 <input
                   type="text"
@@ -63,8 +63,8 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ platform, onSave, onCancel 
                 />
               </div>
               <div>
-                <label htmlFor="maxProfiles" className="block text-gray-700 text-sm font-bold mb-2">
-                  Nombre Maximum de Profils:
+                <label htmlFor="maxProfiles" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+                  Nombre Maximum de Profils
                 </label>
                 <input
                   type="number"
@@ -76,8 +76,8 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ platform, onSave, onCancel 
                 />
               </div>
               <div>
-                <label htmlFor="pinCodeLength" className="block text-gray-700 text-sm font-bold mb-2">
-                  Longueur du Code PIN:
+                <label htmlFor="pinCodeLength" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+                  Longueur du code PIN
                 </label>
                 <input
                   type="number"
@@ -87,20 +87,21 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ platform, onSave, onCancel 
                   onChange={(e) => setPinCodeLength(e.target.value)}
                   required
                 />
+                <p className="text-gray-500 text-xs italic text-left">Entre 4 et 8 chiffres</p>
               </div>
-              <div className="flex justify-between">
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  {platform ? 'Enregistrer' : 'Ajouter'}
-                </button>
+              <div className="flex justify-center space-x-4">
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                   Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  {platform ? 'Enregistrer' : 'Ajouter'}
                 </button>
               </div>
             </form>
