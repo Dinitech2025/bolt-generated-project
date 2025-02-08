@@ -2,9 +2,8 @@ import React from 'react';
 
 const Tâches = () => {
   return (
-    <div>
-      <h1>Tâches</h1>
-      <p>Page de gestion des tâches.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Tâches</h1>
     </div>
   );
 };

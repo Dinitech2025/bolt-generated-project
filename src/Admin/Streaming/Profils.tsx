@@ -1,10 +1,9 @@
 import React from 'react';
 
-const Profils: React.FC = () => {
+const Profils = () => {
   return (
-    <div>
-      <h1>Profils</h1>
-      <p>Page de gestion des profils.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Profils</h1>
     </div>
   );
 };

@@ -2,9 +2,8 @@ import React from 'react';
 
 const Messages = () => {
   return (
-    <div>
-      <h1>Messages</h1>
-      <p>Page de gestion des messages.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Messages</h1>
     </div>
   );
 };

@@ -2,9 +2,8 @@ import React from 'react';
 
 const Images = () => {
   return (
-    <div>
-      <h1>Images</h1>
-      <p>Page de gestion des images.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Images</h1>
     </div>
   );
 };

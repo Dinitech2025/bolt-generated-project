@@ -2,9 +2,8 @@ import React from 'react';
 
 const Intégrations = () => {
   return (
-    <div>
-      <h1>Intégrations</h1>
-      <p>Page des paramètres d'intégrations.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Intégrations</h1>
     </div>
   );
 };

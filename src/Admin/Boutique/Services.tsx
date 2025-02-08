@@ -2,9 +2,8 @@ import React from 'react';
 
 const Services = () => {
   return (
-    <div>
-      <h1>Services</h1>
-      <p>Page de gestion des services.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Services</h1>
     </div>
   );
 };

@@ -1,10 +1,9 @@
 import React from 'react';
 
-const Abonnements: React.FC = () => {
+const Abonnements = () => {
   return (
-    <div>
-      <h1>Abonnements</h1>
-      <p>Page de gestion des abonnements.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Abonnements</h1>
     </div>
   );
 };

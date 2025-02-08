@@ -2,9 +2,8 @@ import React from 'react';
 
 const Système = () => {
   return (
-    <div>
-      <h1>Système</h1>
-      <p>Page des paramètres du système.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Système</h1>
     </div>
   );
 };

@@ -2,9 +2,8 @@ import React from 'react';
 
 const Sauvegarde = () => {
   return (
-    <div>
-      <h1>Sauvegarde</h1>
-      <p>Page des paramètres de sauvegarde.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Sauvegarde</h1>
     </div>
   );
 };

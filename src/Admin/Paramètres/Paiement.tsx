@@ -2,9 +2,8 @@ import React from 'react';
 
 const Paiement = () => {
   return (
-    <div>
-      <h1>Paiement</h1>
-      <p>Page des paramètres de paiement.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Paiement</h1>
     </div>
   );
 };

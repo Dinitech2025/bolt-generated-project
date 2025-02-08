@@ -2,9 +2,8 @@ import React from 'react';
 
 const Clients = () => {
   return (
-    <div>
-      <h1>Clients</h1>
-      <p>Page de gestion des clients.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Clients</h1>
     </div>
   );
 };

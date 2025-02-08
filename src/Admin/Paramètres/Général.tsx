@@ -2,9 +2,8 @@ import React from 'react';
 
 const Général = () => {
   return (
-    <div>
-      <h1>Général</h1>
-      <p>Page des paramètres généraux.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Général</h1>
     </div>
   );
 };
