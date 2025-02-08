@@ -34,22 +34,24 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100">
       <Header isSidebarExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
 
-      {isSidebarExpanded ? (
-        <Sidebar
-          isSidebarExpanded={isSidebarExpanded}
-          toggleSidebar={toggleSidebar}
-          setActivePage={setActivePage}
-          toggleStreamingVOD={toggleStreamingVOD}
-          isStreamingVODOpen={isStreamingVODOpen}
-          streamingVODRef={streamingVODRef}
-        />
-      ) : null}
+      <div className="flex flex-1">
+        {isSidebarExpanded ? (
+          <Sidebar
+            isSidebarExpanded={isSidebarExpanded}
+            toggleSidebar={toggleSidebar}
+            setActivePage={setActivePage}
+            toggleStreamingVOD={toggleStreamingVOD}
+            isStreamingVODOpen={isStreamingVODOpen}
+            streamingVODRef={streamingVODRef}
+          />
+        ) : null}
 
-      <div className={`flex-1 p-4 ${!isSidebarExpanded ? 'w-full' : ''}`}>
-        <Dashboard activePage={activePage} />
+        <div className={`flex-1 p-4`}>
+          <Dashboard activePage={activePage} />
+        </div>
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const { logout } = useAuth();
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col bg-white h-screen bg-gray-100">
       <div className="flex-shrink-0 bg-white border-r border-gray-200 w-64 transition-width duration-300 transform">
         <div className="h-16 flex items-center justify-center border-b border-gray-200">
           <span className="text-2xl font-semibold text-blue-500">DINITECH</span>
@@ -33,19 +33,19 @@ const Sidebar: React.FC<SidebarProps> = ({
             <li className="mb-2">
               <button
                 onClick={() => setActivePage(null)}
-                className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
+                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
               >
-                <Home className="mr-2 h-5 w-5 text-gray-500" />
-                <span>Tableau de Bord</span>
+                <Home className="mr-3 h-5 w-5 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Tableau de Bord</span>
               </button>
             </li>
             <li className="mb-2 relative" ref={streamingVODRef}>
               <button
                 onClick={toggleStreamingVOD}
-                className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
+                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
               >
-                <Tv className="mr-2 h-5 w-5 text-gray-500" />
-                <span>Streaming VOD</span>
+                <Tv className="mr-3 h-5 w-5 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Streaming VOD</span>
               </button>
               {isStreamingVODOpen ? (
                 <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
@@ -53,46 +53,46 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <li className="mb-2">
                       <button
                         onClick={() => setActivePage('plateformes')}
-                        className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
+                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
-                        <Monitor className="mr-2 h-5 w-5 text-gray-500" />
-                        Plateformes
+                        <Monitor className="mr-3 h-5 w-5 text-gray-500" />
+                        <span className="text-sm font-medium text-gray-700">Plateformes</span>
                       </button>
                     </li>
                     <li className="mb-2">
                       <button
                         onClick={() => setActivePage('comptes')}
-                        className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
+                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
-                        <Users2 className="mr-2 h-5 w-5 text-gray-500" />
-                        Comptes
+                        <Users2 className="mr-3 h-5 w-5 text-gray-500" />
+                        <span className="text-sm font-medium text-gray-700">Comptes</span>
                       </button>
                     </li>
                     <li className="mb-2">
                       <button
                         onClick={() => setActivePage('profils')}
-                        className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
+                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
-                        <User2 className="mr-2 h-5 w-5 text-gray-500" />
-                        Profils
+                        <User2 className="mr-3 h-5 w-5 text-gray-500" />
+                        <span className="text-sm font-medium text-gray-700">Profils</span>
                       </button>
                     </li>
                     <li className="mb-2">
                       <button
                         onClick={() => setActivePage('offres')}
-                        className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
+                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
-                        <CreditCard className="mr-2 h-5 w-5 text-gray-500" />
-                        Offres
+                        <CreditCard className="mr-3 h-5 w-5 text-gray-500" />
+                        <span className="text-sm font-medium text-gray-700">Offres</span>
                       </button>
                     </li>
                     <li className="mb-2">
                       <button
                         onClick={() => setActivePage('abonnements')}
-                        className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
+                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
-                        <FileText className="mr-2 h-5 w-5 text-gray-500" />
-                        Abonnements
+                        <FileText className="mr-3 h-5 w-5 text-gray-500" />
+                        <span className="text-sm font-medium text-gray-700">Abonnements</span>
                       </button>
                     </li>
                   </ul>
@@ -105,10 +105,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="mt-auto p-4">
         <button
           onClick={logout}
-          className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
+          className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
         >
-          <LogOut className="mr-2 h-5 w-5 text-gray-500" />
-          <span>Déconnexion</span>
+          <LogOut className="mr-3 h-5 w-5 text-red-500" />
+          <span className="text-sm font-medium text-red-700">Déconnexion</span>
         </button>
       </div>
     </div>
