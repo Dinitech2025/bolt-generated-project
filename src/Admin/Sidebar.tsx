@@ -51,13 +51,31 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const [openSubMenu, setOpenSubMenu] = React.useState<string | null>(null);
   const subMenuRef = useRef<HTMLDivElement>(null);
+  const submenuRefs = useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({
+    streamingVOD: React.createRef<HTMLDivElement>(),
+    boutique: React.createRef<HTMLDivElement>(),
+    finance: React.createRef<HTMLDivElement>(),
+    gestion: React.createRef<HTMLDivElement>(),
+    médias: React.createRef<HTMLDivElement>(),
+    rapports: React.createRef<HTMLDivElement>(),
+    paramètres: React.createRef<HTMLDivElement>(),
+  });
 
   const toggleSubMenu = (menuName: string) => {
     setOpenSubMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (subMenuRef.current && !subMenuRef.current.contains(event.target as Node)) {
+    let clickedInsideSubmenu = false;
+    for (const key in submenuRefs.current) {
+      const ref = submenuRefs.current[key];
+      if (ref.current && ref.current.contains(event.target as Node)) {
+        clickedInsideSubmenu = true;
+        break;
+      }
+    }
+
+    if (!clickedInsideSubmenu) {
       setOpenSubMenu(null);
     }
   };
@@ -139,7 +157,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <span className="text-sm font-medium text-gray-700">Tableau de Bord</span>
               </button>
             </li>
-            <li className="mb-2 relative" ref={streamingVODRef}>
+            <li className="mb-2 relative" ref={submenuRefs.current.streamingVOD}>
               <button
                 onClick={() => toggleSubMenu('streamingVOD')}
                 className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
@@ -153,7 +171,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 setActivePage={setActivePage}
               />
             </li>
-            <li className="mb-2 relative" ref={subMenuRef}>
+            <li className="mb-2 relative" ref={submenuRefs.current.boutique}>
               <button
                 onClick={() => toggleSubMenu('boutique')}
                 className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
@@ -167,7 +185,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 setActivePage={setActivePage}
               />
             </li>
-            <li className="mb-2 relative">
+            <li className="mb-2 relative" ref={submenuRefs.current.finance}>
               <button
                 onClick={() => toggleSubMenu('finance')}
                 className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
@@ -181,7 +199,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 setActivePage={setActivePage}
               />
             </li>
-            <li className="mb-2 relative">
+            <li className="mb-2 relative" ref={submenuRefs.current.gestion}>
               <button
                 onClick={() => toggleSubMenu('gestion')}
                 className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
@@ -195,7 +213,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 setActivePage={setActivePage}
               />
             </li>
-            <li className="mb-2 relative">
+            <li className="mb-2 relative" ref={submenuRefs.current.médias}>
               <button
                 onClick={() => toggleSubMenu('médias')}
                 className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
@@ -209,7 +227,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 setActivePage={setActivePage}
               />
             </li>
-            <li className="mb-2 relative">
+            <li className="mb-2 relative" ref={submenuRefs.current.rapports}>
               <button
                 onClick={() => toggleSubMenu('rapports')}
                 className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
@@ -223,7 +241,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 setActivePage={setActivePage}
               />
             </li>
-            <li className="mb-2 relative">
+            <li className="mb-2 relative" ref={submenuRefs.current.paramètres}>
               <button
                 onClick={() => toggleSubMenu('paramètres')}
                 className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
