@@ -1,9 +1,9 @@
 import React from 'react';
-import Plateformes from './Plateformes';
-import Comptes from './Comptes';
-import Profils from './Profils';
-import Offres from './Offres';
-import Abonnements from './Abonnements';
+import Plateformes from './Streaming/Plateformes';
+import Comptes from './Streaming/Comptes';
+import Profils from './Streaming/Profils';
+import Offres from './Streaming/Offres';
+import Abonnements from './Streaming/Abonnements';
 
 interface DashboardProps {
   activePage: string | null;
