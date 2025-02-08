@@ -52,7 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <ul>
                     <li className="mb-2">
                       <button
-                        onClick={() => setActivePage('Streaming/plateformes')}
+                        onClick={() => setActivePage('Streaming/Plateformes')}
                         className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
                         <Monitor className="mr-3 h-5 w-5 text-gray-500" />
@@ -61,7 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     </li>
                     <li className="mb-2">
                       <button
-                        onClick={() => setActivePage('Streaming/comptes')}
+                        onClick={() => setActivePage('Streaming/Comptes')}
                         className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
                         <Users2 className="mr-3 h-5 w-5 text-gray-500" />
@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     </li>
                     <li className="mb-2">
                       <button
-                        onClick={() => setActivePage('Streaming/profils')}
+                        onClick={() => setActivePage('Streaming/Profils')}
                         className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
                         <User2 className="mr-3 h-5 w-5 text-gray-500" />
@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     </li>
                     <li className="mb-2">
                       <button
-                        onClick={() => setActivePage('Streaming/offres')}
+                        onClick={() => setActivePage('Streaming/Offres')}
                         className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
                         <CreditCard className="mr-3 h-5 w-5 text-gray-500" />
@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     </li>
                     <li className="mb-2">
                       <button
-                        onClick={() => setActivePage('Streaming/abonnements')}
+                        onClick={() => setActivePage('Streaming/Abonnements')}
                         className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
                       >
                         <FileText className="mr-3 h-5 w-5 text-gray-500" />

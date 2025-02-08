@@ -12,15 +12,15 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ activePage }) => {
   const renderPage = () => {
     switch (activePage) {
-      case 'plateformes':
+      case 'Streaming/Plateformes':
         return <Plateformes />;
-      case 'comptes':
+      case 'Streaming/Comptes':
         return <Comptes />;
-      case 'profils':
+      case 'Streaming/Profils':
         return <Profils />;
-      case 'offres':
+      case 'Streaming/Offres':
         return <Offres />;
-      case 'abonnements':
+      case 'Streaming/Abonnements':
         return <Abonnements />;
       default:
         return <p>Bienvenue sur la page d'administration!</p>;
