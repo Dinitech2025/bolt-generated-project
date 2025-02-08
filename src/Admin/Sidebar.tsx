@@ -22,7 +22,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const { logout } = useAuth();
 
   return (
-    <div className="flex flex-col bg-white h-screen bg-gray-100">
+    <div className="flex flex-col border-r border-gray-200 w-64 bg-white h-screen bg-gray-100">
       <div className="flex-shrink-0 bg-white border-r border-gray-200 w-64 transition-width duration-300 transform">
         <div className="h-16 flex items-center justify-center border-b border-gray-200">
           <span className="text-2xl font-semibold text-blue-500">DINITECH</span>
