@@ -1,10 +1,11 @@
 import React from 'react';
+import AddButton from '../components/AddButton';
 
 const RecettesCyber = () => {
   return (
-    <div>
-      <h1>Recettes Cyber</h1>
-      <p>Page de gestion des recettes cyber.</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Recettes Cyber</h1>
+      <AddButton />
     </div>
   );
 };

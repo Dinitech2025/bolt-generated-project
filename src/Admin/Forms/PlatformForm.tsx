@@ -1,110 +1,93 @@
 import React, { useState } from 'react';
-import { Monitor, X } from 'lucide-react';
-
-interface Platform {
-  id: string;
-  name: string;
-  maxProfiles: number;
-  pinCodeLength: number;
-}
 
 interface PlatformFormProps {
-  platform?: Platform;
-  onSave: (platform: Platform) => void;
-  onCancel: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const PlatformForm: React.FC<PlatformFormProps> = ({ platform, onSave, onCancel }) => {
-  const [name, setName] = useState(platform?.name || '');
-  const [maxProfiles, setMaxProfiles] = useState(platform?.maxProfiles?.toString() || '');
-  const [pinCodeLength, setPinCodeLength] = useState(platform?.pinCodeLength?.toString() || '');
+const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
+  const [platformName, setPlatformName] = useState('');
+  const [maxProfiles, setMaxProfiles] = useState<number | ''>('');
+  const [pinLength, setPinLength] = useState<number | ''>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const newPlatform = {
-      id: platform?.id || Math.random().toString(36).substring(2, 15),
-      name,
-      maxProfiles: parseInt(maxProfiles, 10),
-      pinCodeLength: parseInt(pinCodeLength, 10),
-    };
-
-    onSave(newPlatform);
+    // Handle form submission here (e.g., API call)
+    console.log('Form submitted:', {
+      platformName,
+      maxProfiles,
+      pinLength,
+    });
+    onClose(); // Close the modal after submission
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-      <div className="relative top-20 mx-auto p-5 border shadow-lg rounded-xl bg-white w-96">
-        <div className="mt-3">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              {platform ? 'Ajouter une Plateforme' : 'Modifier la Plateforme'}
-            </h3>
-            <button
-              onClick={onCancel}
-              className="text-gray-500 hover:text-gray-700 focus:outline-none"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-          <div className="px-7 py-3">
+      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="mt-3 text-center">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            Ajouter une Nouvelle Plateforme
+          </h3>
+          <div className="mt-2">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="mt-4">
-                <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-left">
-                  Nom
+              <div>
+                <label htmlFor="platformName" className="block text-gray-700 text-sm font-bold mb-2">
+                  Nom de la Plateforme:
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="platformName"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={platformName}
+                  onChange={(e) => setPlatformName(e.target.value)}
                   required
                 />
               </div>
               <div>
-                <label htmlFor="maxProfiles" className="block text-gray-700 text-sm font-bold mb-2 text-left">
-                  Nombre Maximum de Profils
+                <label htmlFor="maxProfiles" className="block text-gray-700 text-sm font-bold mb-2">
+                  Nombre Maximum de Profils:
                 </label>
                 <input
                   type="number"
                   id="maxProfiles"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={maxProfiles}
-                  onChange={(e) => setMaxProfiles(e.target.value)}
+                  onChange={(e) => setMaxProfiles(e.target.value === '' ? '' : parseInt(e.target.value))}
                   required
                 />
               </div>
               <div>
-                <label htmlFor="pinCodeLength" className="block text-gray-700 text-sm font-bold mb-2 text-left">
-                  Longueur du code PIN
+                <label htmlFor="pinLength" className="block text-gray-700 text-sm font-bold mb-2">
+                  Longueur du Code PIN:
                 </label>
                 <input
                   type="number"
-                  id="pinCodeLength"
+                  id="pinLength"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  value={pinCodeLength}
-                  onChange={(e) => setPinCodeLength(e.target.value)}
+                  value={pinLength}
+                  onChange={(e) => setPinLength(e.target.value === '' ? '' : parseInt(e.target.value))}
                   required
                 />
-                <p className="text-gray-500 text-xs italic text-left">Entre 4 et 8 chiffres</p>
               </div>
-              <div className="flex justify-center space-x-4">
-                <button
-                  type="button"
-                  onClick={onCancel}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Annuler
-                </button>
+              <div className="items-center px-4 py-3">
                 <button
                   type="submit"
-                  className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
                 >
-                  {platform ? 'Enregistrer' : 'Ajouter'}
+                  Ajouter la Plateforme
                 </button>
               </div>
             </form>
+          </div>
+          <div className="mt-4">
+            <button
+              className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+              onClick={onClose}
+            >
+              Fermer
+            </button>
           </div>
         </div>
       </div>
