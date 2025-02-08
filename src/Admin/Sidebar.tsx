@@ -1,500 +1,242 @@
 import React from 'react';
-import {
-  Home,
-  Tv,
-  Monitor,
-  Users2,
-  User2,
-  CreditCard,
-  FileText,
-  LogOut,
-  ShoppingCart,
-  DollarSign,
-  User,
-  Image,
-  BarChart,
-  Settings,
-  Package,
-  Wrench,
-  ShoppingBag,
-  Users,
-  ListChecks,
-  MessageSquare,
-  Globe,
-  Shield,
-  Database,
-  Truck,
-  Gift,
-  Gear,
-} from 'lucide-react';
-import { useAuth } from '../AuthContext';
+    import {
+      Home,
+      Tv,
+      Monitor,
+      Users2,
+      User2,
+      CreditCard,
+      FileText,
+      LogOut,
+      ShoppingCart,
+      DollarSign,
+      User,
+      Image,
+      BarChart,
+      Settings,
+      Package,
+      Wrench,
+      ShoppingBag,
+      Users,
+      ListChecks,
+      MessageSquare,
+      Globe,
+      Shield,
+      Database,
+      Truck,
+      Gift,
+      Cog
+    } from 'lucide-react';
+    import { useAuth } from '../AuthContext';
+    import SubMenu from './SubMenu';
 
-interface SidebarProps {
-  isSidebarExpanded: boolean;
-  toggleSidebar: () => void;
-  setActivePage: (page: string | null) => void;
-  toggleStreamingVOD: () => void;
-  isStreamingVODOpen: boolean;
-  streamingVODRef: React.RefObject<HTMLDivElement>;
-}
+    interface SidebarProps {
+      isSidebarExpanded: boolean;
+      toggleSidebar: () => void;
+      setActivePage: (page: string | null) => void;
+      toggleStreamingVOD: () => void;
+      isStreamingVODOpen: boolean;
+      streamingVODRef: React.RefObject<HTMLDivElement>;
+    }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  isSidebarExpanded,
-  toggleSidebar,
-  setActivePage,
-  toggleStreamingVOD,
-  isStreamingVODOpen,
-  streamingVODRef,
-}) => {
-  const { logout } = useAuth();
+    const Sidebar: React.FC<SidebarProps> = ({
+      isSidebarExpanded,
+      toggleSidebar,
+      setActivePage,
+      toggleStreamingVOD,
+      isStreamingVODOpen,
+      streamingVODRef,
+    }) => {
+      const { logout } = useAuth();
 
-  const [isBoutiqueOpen, setIsBoutiqueOpen] = React.useState(false);
-  const [isFinanceOpen, setIsFinanceOpen] = React.useState(false);
-  const [isGestionOpen, setIsGestionOpen] = React.useState(false);
-  const [isMédiasOpen, setIsMédiasOpen] = React.useState(false);
-  const [isRapportsOpen, setIsRapportsOpen] = React.useState(false);
-  const [isParamètresOpen, setIsParamètresOpen] = React.useState(false);
+      const [openSubMenu, setOpenSubMenu] = React.useState<string | null>(null);
 
-  const toggleBoutique = () => {
-    setIsBoutiqueOpen(!isBoutiqueOpen);
-  };
+      const toggleSubMenu = (menuName: string) => {
+        setOpenSubMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
+      };
 
-  const toggleFinance = () => {
-    setIsFinanceOpen(!isFinanceOpen);
-  };
+      const streamingVODItems = [
+        { label: 'Plateformes', page: 'Streaming/Plateformes', icon: Monitor },
+        { label: 'Comptes', page: 'Streaming/Comptes', icon: Users2 },
+        { label: 'Profils', page: 'Streaming/Profils', icon: User2 },
+        { label: 'Offres', page: 'Streaming/Offres', icon: CreditCard },
+        { label: 'Abonnements', page: 'Streaming/Abonnements', icon: FileText },
+      ];
 
-  const toggleGestion = () => {
-    setIsGestionOpen(!isGestionOpen);
-  };
+      const boutiqueItems = [
+        { label: 'Produits', page: 'Boutique/Produits', icon: Package },
+        { label: 'Services', page: 'Boutique/Services', icon: Wrench },
+        { label: 'Commandes', page: 'Boutique/Commandes', icon: ShoppingBag },
+      ];
 
-  const toggleMédias = () => {
-    setIsMédiasOpen(!isMédiasOpen);
-  };
+      const financeItems = [
+        { label: 'Factures', page: 'Finance/Factures', icon: FileText },
+        { label: 'Dépenses', page: 'Finance/Dépenses', icon: CreditCard },
+        { label: 'Recettes Cyber', page: 'Finance/RecettesCyber', icon: ShoppingCart },
+      ];
 
-  const toggleRapports = () => {
-    setIsRapportsOpen(!isRapportsOpen);
-  };
+      const gestionItems = [
+        { label: 'Clients', page: 'Gestion/Clients', icon: Users },
+        { label: 'Employés', page: 'Gestion/Employés', icon: Users2 },
+        { label: 'Tâches', page: 'Gestion/Tâches', icon: ListChecks },
+        { label: 'Messages', page: 'Gestion/Messages', icon: MessageSquare },
+      ];
 
-  const toggleParamètres = () => {
-    setIsParamètresOpen(!isParamètresOpen);
-  };
+      const médiasItems = [
+        { label: 'Images', page: 'Médias/Images', icon: Image },
+        { label: 'Vidéos', page: 'Médias/Vidéos', icon: Tv },
+        { label: 'Fichiers', page: 'Médias/Fichiers', icon: FileText },
+      ];
 
-  return (
-    <div className="flex flex-col border-r border-gray-200 w-64 bg-white h-screen bg-gray-100">
-      <div className="flex-shrink-0 bg-white border-r border-gray-200 w-64 transition-width duration-300 transform">
-        <div className="h-16 flex items-center justify-center border-b border-gray-200">
-          <span className="text-2xl font-semibold text-blue-500">DINITECH</span>
+      const rapportsItems = [
+        { label: 'Journalier', page: 'Rapports/Journalier', icon: BarChart },
+        { label: 'Hebdomadaire', page: 'Rapports/Hebdomadaire', icon: BarChart },
+        { label: 'Mensuel', page: 'Rapports/Mensuel', icon: BarChart },
+      ];
+
+      const paramètresItems = [
+        { label: 'Général', page: 'Paramètres/Général', icon: Cog },
+        { label: 'Boutique', page: 'Paramètres/Boutique', icon: ShoppingCart },
+        { label: 'Paiement', page: 'Paramètres/Paiement', icon: CreditCard },
+        { label: 'Livraison', page: 'Paramètres/Livraison', icon: Truck },
+        { label: 'Marketing', page: 'Paramètres/Marketing', icon: Gift },
+        { label: 'SEO', page: 'Paramètres/SEO', icon: Globe },
+        { label: 'Intégrations', page: 'Paramètres/Intégrations', icon: Settings },
+        { label: 'Système', page: 'Paramètres/Système', icon: Cog },
+        { label: 'Sécurité', page: 'Paramètres/Sécurité', icon: Shield },
+        { label: 'Sauvegarde', page: 'Paramètres/Sauvegarde', icon: Database },
+      ];
+
+      return (
+        <div className="flex flex-col border-r border-gray-200 w-64 bg-white h-screen bg-gray-100">
+          <div className="flex-shrink-0 bg-white border-r border-gray-200 w-64 transition-width duration-300 transform">
+            <div className="h-16 flex items-center justify-center border-b border-gray-200">
+              <span className="text-2xl font-semibold text-blue-500">DINITECH</span>
+            </div>
+
+            <nav className="p-4">
+              <ul>
+                <li className="mb-2">
+                  <button
+                    onClick={() => setActivePage(null)}
+                    className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+                  >
+                    <Home className="mr-3 h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Tableau de Bord</span>
+                  </button>
+                </li>
+                <li className="mb-2 relative" ref={streamingVODRef}>
+                  <button
+                    onClick={() => toggleSubMenu('streamingVOD')}
+                    className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+                  >
+                    <Tv className="mr-3 h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Streaming VOD</span>
+                  </button>
+                  <SubMenu
+                    isOpen={openSubMenu === 'streamingVOD'}
+                    items={streamingVODItems}
+                    setActivePage={setActivePage}
+                  />
+                </li>
+                <li className="mb-2 relative">
+                  <button
+                    onClick={() => toggleSubMenu('boutique')}
+                    className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+                  >
+                    <ShoppingCart className="mr-3 h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Boutique</span>
+                  </button>
+                  <SubMenu
+                    isOpen={openSubMenu === 'boutique'}
+                    items={boutiqueItems}
+                    setActivePage={setActivePage}
+                  />
+                </li>
+                <li className="mb-2 relative">
+                  <button
+                    onClick={() => toggleSubMenu('finance')}
+                    className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+                  >
+                    <DollarSign className="mr-3 h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Finance</span>
+                  </button>
+                  <SubMenu
+                    isOpen={openSubMenu === 'finance'}
+                    items={financeItems}
+                    setActivePage={setActivePage}
+                  />
+                </li>
+                <li className="mb-2 relative">
+                  <button
+                    onClick={() => toggleSubMenu('gestion')}
+                    className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+                  >
+                    <User className="mr-3 h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Gestion</span>
+                  </button>
+                  <SubMenu
+                    isOpen={openSubMenu === 'gestion'}
+                    items={gestionItems}
+                    setActivePage={setActivePage}
+                  />
+                </li>
+                <li className="mb-2 relative">
+                  <button
+                    onClick={() => toggleSubMenu('médias')}
+                    className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+                  >
+                    <Image className="mr-3 h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Médias</span>
+                  </button>
+                  <SubMenu
+                    isOpen={openSubMenu === 'médias'}
+                    items={médiasItems}
+                    setActivePage={setActivePage}
+                  />
+                </li>
+                <li className="mb-2 relative">
+                  <button
+                    onClick={() => toggleSubMenu('rapports')}
+                    className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+                  >
+                    <BarChart className="mr-3 h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Rapports</span>
+                  </button>
+                  <SubMenu
+                    isOpen={openSubMenu === 'rapports'}
+                    items={rapportsItems}
+                    setActivePage={setActivePage}
+                  />
+                </li>
+                <li className="mb-2 relative">
+                  <button
+                    onClick={() => toggleSubMenu('paramètres')}
+                    className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+                  >
+                    <Settings className="mr-3 h-5 w-5 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Paramètres</span>
+                  </button>
+                  <SubMenu
+                    isOpen={openSubMenu === 'paramètres'}
+                    items={paramètresItems}
+                    setActivePage={setActivePage}
+                  />
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div className="mt-auto p-4">
+            <button
+              onClick={logout}
+              className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
+            >
+              <LogOut className="mr-3 h-5 w-5 text-red-500" />
+              <span className="text-sm font-medium text-red-700">Déconnexion</span>
+            </button>
+          </div>
         </div>
+      );
+    };
 
-        <nav className="p-4">
-          <ul>
-            <li className="mb-2">
-              <button
-                onClick={() => setActivePage(null)}
-                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-              >
-                <Home className="mr-3 h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Tableau de Bord</span>
-              </button>
-            </li>
-            <li className="mb-2 relative" ref={streamingVODRef}>
-              <button
-                onClick={toggleStreamingVOD}
-                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-              >
-                <Tv className="mr-3 h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Streaming VOD</span>
-              </button>
-              {isStreamingVODOpen ? (
-                <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-                  <ul>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Streaming/Plateformes')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Monitor className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Plateformes</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Streaming/Comptes')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Users2 className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Comptes</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Streaming/Profils')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <User2 className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Profils</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Streaming/Offres')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <CreditCard className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Offres</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Streaming/Abonnements')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <FileText className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Abonnements</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : null}
-            </li>
-            <li className="mb-2 relative">
-              <button
-                onClick={toggleBoutique}
-                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-              >
-                <ShoppingCart className="mr-3 h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Boutique</span>
-              </button>
-              {isBoutiqueOpen ? (
-                <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-                  <ul>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Boutique/Produits')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Package className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Produits</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Boutique/Services')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Wrench className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Services</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Boutique/Commandes')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <ShoppingBag className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Commandes</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : null}
-            </li>
-            <li className="mb-2 relative">
-              <button
-                onClick={toggleFinance}
-                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-              >
-                <DollarSign className="mr-3 h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Finance</span>
-              </button>
-              {isFinanceOpen ? (
-                <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-                  <ul>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Finance/Factures')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <FileText className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Factures</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Finance/Dépenses')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <CreditCard className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Dépenses</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Finance/RecettesCyber')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <ShoppingCart className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Recettes Cyber</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : null}
-            </li>
-            <li className="mb-2 relative">
-              <button
-                onClick={toggleGestion}
-                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-              >
-                <User className="mr-3 h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Gestion</span>
-              </button>
-              {isGestionOpen ? (
-                <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-                  <ul>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Gestion/Clients')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Users className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Clients</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Gestion/Employés')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Users2 className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Employés</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Gestion/Tâches')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <ListChecks className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Tâches</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Gestion/Messages')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <MessageSquare className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Messages</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : null}
-            </li>
-            <li className="mb-2 relative">
-              <button
-                onClick={toggleMédias}
-                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-              >
-                <Image className="mr-3 h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Médias</span>
-              </button>
-              {isMédiasOpen ? (
-                <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-                  <ul>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Médias/Images')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Image className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Images</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Médias/Vidéos')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Tv className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Vidéos</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Médias/Fichiers')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <FileText className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Fichiers</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : null}
-            </li>
-            <li className="mb-2 relative">
-              <button
-                onClick={toggleRapports}
-                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-              >
-                <BarChart className="mr-3 h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Rapports</span>
-              </button>
-              {isRapportsOpen ? (
-                <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-                  <ul>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Rapports/Journalier')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <BarChart className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Journalier</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Rapports/Hebdomadaire')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <BarChart className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Hebdomadaire</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Rapports/Mensuel')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <BarChart className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Mensuel</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : null}
-            </li>
-            <li className="mb-2 relative">
-              <button
-                onClick={toggleParamètres}
-                className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-              >
-                <Settings className="mr-3 h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Paramètres</span>
-              </button>
-              {isParamètresOpen ? (
-                <div className="absolute left-64 top-0 bg-white border border-gray-200 rounded-md shadow-md z-10">
-                  <ul>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Général')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Gear className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Général</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Boutique')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <ShoppingCart className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Boutique</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Paiement')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <CreditCard className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Paiement</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Livraison')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Truck className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Livraison</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Marketing')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Gift className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Marketing</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/SEO')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Globe className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">SEO</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Intégrations')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Settings className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Intégrations</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Système')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Gear className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Système</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Sécurité')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Shield className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Sécurité</span>
-                      </button>
-                    </li>
-                    <li className="mb-2">
-                      <button
-                        onClick={() => setActivePage('Paramètres/Sauvegarde')}
-                        className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-                      >
-                        <Database className="mr-3 h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700">Sauvegarde</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              ) : null}
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div className="mt-auto p-4">
-        <button
-          onClick={logout}
-          className="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-blue-700 w-full text-left"
-        >
-          <LogOut className="mr-3 h-5 w-5 text-red-500" />
-          <span className="text-sm font-medium text-red-700">Déconnexion</span>
-        </button>
-      </div>
-    </div>
-  );
-};
-
-export default Sidebar;
+    export default Sidebar;
