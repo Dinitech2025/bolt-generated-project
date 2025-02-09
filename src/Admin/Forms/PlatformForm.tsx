@@ -5,12 +5,27 @@ import { supabase } from '../../supabase';
 interface PlatformFormProps {
   isOpen: boolean;
   onClose: () => void;
+  platform?: {
+    id: number;
+    platform_name: string;
+    max_profiles: number | null;
+    pin_code_length: number | null;
+  };
+  onPlatformUpdate?: (updatedPlatform: {
+    id: number;
+    platform_name: string;
+    max_profiles: number | null;
+    pin_code_length: number | null;
+  }) => void;
+  fetchPlatforms: () => Promise<void>;
 }
 
-const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
-  const [platformName, setPlatformName] = useState('');
-  const [maxProfiles, setMaxProfiles] = useState<number | ''>('');
-  const [pinLength, setPinLength] = useState<number | ''>('');
+const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose, platform, onPlatformUpdate, fetchPlatforms }) => {
+  const [platformName, setPlatformName] = useState(platform?.platform_name || '');
+  const [maxProfiles, setMaxProfiles] = useState<number | ''>(platform?.max_profiles?.toString() || '');
+  const [pinLength, setPinLength] = useState<number | ''>(platform?.pin_code_length?.toString() || '');
+
+  const isUpdateMode = !!platform;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,23 +38,43 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
 
       console.log('Data being sent to Supabase:', insertData);
 
-      const { data, error } = await supabase
-        .from('platforms')
-        .insert([insertData]);
+      let response;
 
-      if (error) {
-        console.error('Supabase insertion error:', error);
-        alert('Failed to add platform. Please check the console for details.');
+      if (isUpdateMode && platform) {
+        response = await supabase
+          .from('platforms')
+          .update(insertData)
+          .eq('id', platform.id);
+      } else {
+        response = await supabase
+          .from('platforms')
+          .insert([insertData]);
+      }
+
+      if (response.error) {
+        console.error('Supabase insertion error:', response.error);
+        alert('Failed to add/update platform. Please check the console for details.');
         return;
       }
 
-      console.log('Platform added successfully:', data);
+      console.log('Platform added/updated successfully:', response.data);
       onClose();
       setPlatformName('');
       setMaxProfiles('');
       setPinLength('');
+
+      if (isUpdateMode && platform && onPlatformUpdate) {
+        onPlatformUpdate({
+          id: platform.id,
+          platform_name: platformName,
+          max_profiles: maxProfiles === '' ? null : parseInt(maxProfiles),
+          pin_code_length: pinLength === '' ? null : parseInt(pinLength),
+        });
+      }
+
+      fetchPlatforms(); // Refresh the platform list after adding/updating
     } catch (error) {
-      console.error('Error adding platform:', error);
+      console.error('Error adding/updating platform:', error);
       alert('An unexpected error occurred. Please check the console for details.');
     }
   };
@@ -51,7 +86,7 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div className="mt-3 text-center">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Ajouter une Nouvelle Plateforme
+            {isUpdateMode ? 'Modifier la Plateforme' : 'Ajouter une Nouvelle Plateforme'}
           </h3>
           <div className="mt-8">
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -99,7 +134,7 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
                   type="submit"
                   className="px-4 py-2 bg-custom-blue text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-green-300"
                 >
-                  Ajouter la Plateforme
+                  {isUpdateMode ? 'Modifier la Plateforme' : 'Ajouter la Plateforme'}
                 </button>
               </div>
             </form>
