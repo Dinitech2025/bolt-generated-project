@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { X } from 'lucide-react';
 
 interface PlatformFormProps {
   isOpen: boolean;
@@ -30,10 +31,10 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Ajouter une Nouvelle Plateforme
           </h3>
-          <div className="mt-2">
+          <div className="mt-8">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="platformName" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="platformName" className="block text-gray-700 text-sm font-bold mb-2 text-left">
                   Nom de la Plateforme:
                 </label>
                 <input
@@ -46,7 +47,7 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
                 />
               </div>
               <div>
-                <label htmlFor="maxProfiles" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="maxProfiles" className="block text-gray-700 text-sm font-bold mb-2 text-left">
                   Nombre Maximum de Profils:
                 </label>
                 <input
@@ -59,7 +60,7 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
                 />
               </div>
               <div>
-                <label htmlFor="pinLength" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="pinLength" className="block text-gray-700 text-sm font-bold mb-2 text-left">
                   Longueur du Code PIN:
                 </label>
                 <input
@@ -74,21 +75,19 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
               <div className="items-center px-4 py-3">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
+                  className="px-4 py-2 bg-custom-blue text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-green-300"
                 >
                   Ajouter la Plateforme
                 </button>
               </div>
             </form>
           </div>
-          <div className="mt-4">
-            <button
-              className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
-              onClick={onClose}
-            >
-              Fermer
-            </button>
-          </div>
+          <button
+            className="absolute top-0 right-0 m-2 px-2 py-1 rounded-full hover:bg-gray-200"
+            onClick={onClose}
+          >
+            <X size={20} />
+          </button>
         </div>
       </div>
     </div>
