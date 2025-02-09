@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { supabase } from '../../supabase';
 
 interface PlatformFormProps {
   isOpen: boolean;
@@ -11,15 +12,36 @@ const PlatformForm: React.FC<PlatformFormProps> = ({ isOpen, onClose }) => {
   const [maxProfiles, setMaxProfiles] = useState<number | ''>('');
   const [pinLength, setPinLength] = useState<number | ''>('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here (e.g., API call)
-    console.log('Form submitted:', {
-      platformName,
-      maxProfiles,
-      pinLength,
-    });
-    onClose(); // Close the modal after submission
+    try {
+      const insertData = {
+        platform_name: platformName,
+        max_profiles: maxProfiles === '' ? null : parseInt(maxProfiles),
+        pin_code_length: pinLength === '' ? null : parseInt(pinLength),
+      };
+
+      console.log('Data being sent to Supabase:', insertData);
+
+      const { data, error } = await supabase
+        .from('platforms')
+        .insert([insertData]);
+
+      if (error) {
+        console.error('Supabase insertion error:', error);
+        alert('Failed to add platform. Please check the console for details.');
+        return;
+      }
+
+      console.log('Platform added successfully:', data);
+      onClose();
+      setPlatformName('');
+      setMaxProfiles('');
+      setPinLength('');
+    } catch (error) {
+      console.error('Error adding platform:', error);
+      alert('An unexpected error occurred. Please check the console for details.');
+    }
   };
 
   if (!isOpen) return null;
