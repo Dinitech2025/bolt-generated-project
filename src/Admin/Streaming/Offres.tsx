@@ -170,4 +170,3 @@ const Offres = () => {
 };
 
 export default Offres;
-
