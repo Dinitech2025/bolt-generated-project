@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '../../supabase';
 import ImageSelector from './ImageSelector';
@@ -8,9 +8,10 @@ interface OffreFormProps {
   onClose: () => void;
   platforms: { id: number; platform_name: string }[];
   onOffreAdded: () => void;
+  offre?: any; // Add optional offre prop
 }
 
-const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOffreAdded }) => {
+const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOffreAdded, offre }) => {
   const [offreName, setOffreName] = useState('');
   const [description, setDescription] = useState('');
   const [numberOfMonths, setNumberOfMonths] = useState<number | ''>('');
@@ -18,6 +19,20 @@ const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOff
   const [selectedPlatformId, setSelectedPlatformId] = useState<number | null>(null);
   const [offreImageUrl, setOffreImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const isUpdateMode = !!offre; // Determine if it's update mode based on offre prop
+
+  useEffect(() => {
+    if (offre) {
+      // When in update mode, populate the form with offre data
+      setOffreName(offre.offre_name || '');
+      setDescription(offre.description || '');
+      setNumberOfMonths(offre.number_of_months?.toString() || '');
+      setOffrePrice(offre.offre_price?.toString() || '');
+      setSelectedPlatformId(offre.platform_id || null);
+      setOffreImageUrl(offre.offre_image_url || null);
+    }
+  }, [offre]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,31 +45,44 @@ const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOff
     setLoading(true);
 
     try {
-      const { data, error } = await supabase
-        .from('offres')
-        .insert([
-          {
-            platform_id: selectedPlatformId,
-            offre_name: offreName,
-            description: description, // Description is now optional
-            number_of_months: numberOfMonths === '' ? null : parseInt(numberOfMonths),
-            offre_price: offrePrice === '' ? null : parseInt(offrePrice),
-            offre_image_url: offreImageUrl,
-          },
-        ])
-        .select();
+      const offreData = {
+        platform_id: selectedPlatformId,
+        offre_name: offreName,
+        description: description, // Description is now optional
+        number_of_months: numberOfMonths === '' ? null : parseInt(numberOfMonths),
+        offre_price: offrePrice === '' ? null : parseInt(offrePrice),
+        offre_image_url: offreImageUrl,
+      };
 
-      if (error) {
-        console.error('Error inserting offre:', error);
-        alert('Failed to add offre. Please check the console for details.');
+      let response;
+
+      if (isUpdateMode && offre) {
+        // Update existing offre
+        response = await supabase
+          .from('offres')
+          .update(offreData)
+          .eq('id', offre.id)
+          .select();
       } else {
-        console.log('Offre added successfully:', data);
-        alert('Offre ajoutée avec succès!');
+        // Insert new offre
+        response = await supabase
+          .from('offres')
+          .insert([offreData])
+          .select();
+      }
+
+
+      if (response.error) {
+        console.error('Error inserting/updating offre:', error);
+        alert('Failed to add/update offre. Please check the console for details.');
+      } else {
+        console.log('Offre added/updated successfully:', response.data);
+        alert(`Offre ${isUpdateMode ? 'modifiée' : 'ajoutée'} avec succès!`);
         onOffreAdded();
         onClose();
       }
     } catch (error) {
-      console.error('Error adding offre:', error);
+      console.error('Error adding/updating offre:', error);
       alert('An unexpected error occurred. Please check the console for details.');
     } finally {
       setLoading(false);
@@ -73,7 +101,9 @@ const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOff
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div className="mt-3 text-center">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Ajouter une Nouvelle Offre</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            {isUpdateMode ? 'Modifier Offre' : 'Ajouter une Nouvelle Offre'}
+          </h3>
           <div className="mt-8">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -86,6 +116,7 @@ const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOff
                   value={selectedPlatformId || ''}
                   onChange={(e) => setSelectedPlatformId(parseInt(e.target.value))}
                   required
+                  disabled={isUpdateMode} // Disable platform selection in edit mode
                 >
                   <option value="">Sélectionner une plateforme</option>
                   {platforms.map((platform) => (
@@ -117,7 +148,6 @@ const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOff
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  /* required  <- REMOVED REQUIRED ATTRIBUTE */
                 />
               </div>
 
@@ -152,7 +182,7 @@ const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOff
               </div>
 
               {/* Image Selector Component */}
-              <ImageSelector onImageSelect={handleImageSelect} />
+              <ImageSelector onImageSelect={handleImageSelect} selectedImageUrl={offreImageUrl || ''} />
 
               <div className="items-center px-4 py-3">
                 <button
@@ -160,7 +190,7 @@ const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOff
                   className={`px-4 py-2 bg-custom-blue text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-green-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   disabled={loading}
                 >
-                  {loading ? 'Ajout de l\'offre...' : 'Ajouter l\'offre'}
+                  {loading ? (isUpdateMode ? 'Modification...' : 'Ajout de l\'offre...') : (isUpdateMode ? 'Modifier l\'offre' : 'Ajouter l\'offre')}
                 </button>
               </div>
             </form>
@@ -178,3 +208,4 @@ const OffreForm: React.FC<OffreFormProps> = ({ isOpen, onClose, platforms, onOff
 };
 
 export default OffreForm;
+
