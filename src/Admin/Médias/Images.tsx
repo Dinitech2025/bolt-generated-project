@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase';
-import { X } from 'lucide-react'; // Import close icon
+import { X, UploadCloud } from 'lucide-react'; // Import UploadCloud icon
+import ImageUploadForm from '../Forms/ImageUploadForm'; // Import ImageUploadForm
+import AddButton from '../components/AddButton'; // Import AddButton component
 
 const Images = () => {
-  const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
-  const [file, setFile] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null); // State for preview modal
+  const [isUploadFormVisible, setIsUploadFormVisible] = useState(false); // State to control form visibility
 
   useEffect(() => {
     fetchImages();
@@ -32,53 +33,6 @@ const Images = () => {
   };
 
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!file) {
-      alert("Veuillez sélectionner une image.");
-      return;
-    }
-
-    setUploading(true);
-
-    try {
-      const timestamp = Date.now();
-      const fileExt = file.name.split('.').pop();
-      const fileName = `image_${timestamp}.${fileExt}`;
-
-      const { error } = await supabase.storage
-        .from('images')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (error) {
-        console.error('Error uploading image:', error);
-        alert('Erreur lors de l\'upload de l\'image.');
-      } else {
-        alert('Image uploadée avec succès!');
-        fetchImages(); // Refresh image list after upload
-        setFile(null); // Reset file input
-        // Reset file input value (tricky in React, better to control the input)
-        const fileInput = document.getElementById('image-upload-input') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = '';
-        }
-      }
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert('Erreur inattendue lors de l\'upload.');
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const openPreviewModal = (imageUrl: string) => {
     setPreviewImageUrl(imageUrl);
   };
@@ -87,38 +41,32 @@ const Images = () => {
     setPreviewImageUrl(null);
   };
 
+  const handleOpenUploadForm = () => {
+    setIsUploadFormVisible(true);
+  };
+
+  const handleCloseUploadForm = () => {
+    setIsUploadFormVisible(false);
+  };
+
+  const handleImageUploadSuccess = () => {
+    fetchImages(); // Refresh images after successful upload in modal
+    setIsUploadFormVisible(false); // Close the modal after upload
+  };
+
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-semibold mb-4">Images</h1>
+      <h1 className="text-2xl font-semibold mb-4">Galerie d'images</h1> {/* Updated Page Title */}
 
-      {/* Upload Form */}
-      <div className="mb-6 p-4 bg-white rounded-md shadow-md">
-        <h2 className="text-lg font-semibold mb-3">Upload Image</h2>
-        <div className="mb-4">
-          <label htmlFor="image-upload-input" className="block text-gray-700 text-sm font-bold mb-2">
-            Choisir une image:
-          </label>
-          <input
-            id="image-upload-input"
-            type="file"
-            accept="image/*"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={handleFileChange}
-          />
-        </div>
-        <button
-          onClick={handleUpload}
-          disabled={uploading || !file}
-          className={`bg-custom-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${uploading || !file ? 'opacity-50 cursor-not-allowed' : ''}`}
-        >
-          {uploading ? 'Uploading...' : 'Upload Image'}
-        </button>
+      {/* Add Image Button */}
+      <div className="flex justify-end mb-4">
+        <AddButton onClick={handleOpenUploadForm} /> {/* Use AddButton component */}
       </div>
 
       {/* Image List */}
       <div>
-        <h2 className="text-lg font-semibold mb-3">Liste des Images</h2>
+        {/* Removed Subtitle */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((imageUrl, index) => (
             <div key={index} className="bg-white rounded-md shadow-md overflow-hidden cursor-pointer" onClick={() => openPreviewModal(imageUrl)}>
@@ -154,6 +102,13 @@ const Images = () => {
           </div>
         </div>
       )}
+
+      {/* Image Upload Form Modal */}
+      <ImageUploadForm
+        isOpen={isUploadFormVisible}
+        onClose={handleCloseUploadForm}
+        onImageUploadSuccess={handleImageUploadSuccess}
+      />
     </div>
   );
 };
