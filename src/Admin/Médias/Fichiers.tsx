@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase';
-import { X, File as FileIcon } from 'lucide-react';
+import { X, File as FileIcon, Trash } from 'lucide-react'; // Import Trash icon
 import FileUploadForm from '../Forms/FileUploadForm';
 import AddButton from '../components/AddButton';
 
@@ -53,6 +53,31 @@ const Fichiers = () => {
     setIsUploadFormVisible(false);
   };
 
+  const handleDeleteFichier = async (fichierUrl: string) => {
+    const fichierName = fichierUrl.split('/').pop() || '';
+    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer le fichier "${fichierName}"?`)) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase.storage
+        .from('fichiers')
+        .remove([fichierName]);
+
+      if (error) {
+        console.error('Error deleting fichier:', error);
+        alert('Erreur lors de la suppression du fichier.');
+      } else {
+        alert('Fichier supprimé avec succès!');
+        setFichiers(fichiers.filter(fileUrl => fileUrl !== fichierUrl));
+      }
+    } catch (error) {
+      console.error('Error deleting fichier:', error);
+      alert('Erreur inattendue lors de la suppression du fichier.');
+    }
+  };
+
+
   const getFileTypeIcon = (filename: string) => {
     const extension = filename.split('.').pop()?.toLowerCase() || '';
     switch (extension) {
@@ -85,16 +110,23 @@ const Fichiers = () => {
       <div className="overflow-hidden max-h-[calc(100vh-180px)] overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {fichiers.map((fichierUrl, index) => (
-            <div key={index} className="bg-white rounded-md shadow-md overflow-hidden cursor-pointer" onClick={() => openPreviewModal(fichierUrl)}>
+            <div key={index} className="bg-white rounded-md shadow-md overflow-hidden cursor-pointer relative"> {/* Added relative */}
               {/* File Type Icon based on extension */}
               <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
                 {getFileTypeIcon(fichierUrl.split('/').pop() || '')}
               </div>
-              <div className="p-3">
+              <div className="p-3 flex justify-between items-center"> {/* Flex container */}
                 <p className="text-sm text-gray-600 truncate">{fichierUrl.split('/').pop()}</p>
-                <a href={fichierUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-sm hover:underline block mt-2"> {/* Download Link */}
+                <a href={fichierUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-sm hover:underline block mt-2">
                   Télécharger
                 </a>
+                <button
+                  onClick={() => handleDeleteFichier(fichierUrl)}
+                  className="hover:text-red-500 focus:outline-none"
+                  aria-label={`Supprimer le fichier ${fichierUrl.split('/').pop()}`}
+                >
+                  <Trash className="h-4 w-4" />
+                </button>
               </div>
             </div>
           ))}

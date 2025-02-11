@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase';
-import { X, Film } from 'lucide-react';
+import { X, Film, Trash } from 'lucide-react'; // Import Trash icon
 import VideoUploadForm from '../Forms/VideoUploadForm';
 import AddButton from '../components/AddButton';
 
@@ -53,6 +53,31 @@ const Vidéos = () => {
     setIsUploadFormVisible(false);
   };
 
+  const handleDeleteVideo = async (videoUrl: string) => {
+    const videoName = videoUrl.split('/').pop() || '';
+    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer la vidéo "${videoName}"?`)) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase.storage
+        .from('videos')
+        .remove([videoName]);
+
+      if (error) {
+        console.error('Error deleting video:', error);
+        alert('Erreur lors de la suppression de la vidéo.');
+      } else {
+        alert('Vidéo supprimée avec succès!');
+        setVideos(videos.filter(vidUrl => vidUrl !== videoUrl));
+      }
+    } catch (error) {
+      console.error('Error deleting video:', error);
+      alert('Erreur inattendue lors de la suppression de la vidéo.');
+    }
+  };
+
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-semibold mb-4">Galerie de Vidéos</h1>
@@ -66,15 +91,23 @@ const Vidéos = () => {
       <div className="overflow-hidden max-h-[calc(100vh-180px)] overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {videos.map((videoUrl, index) => (
-            <div key={index} className="bg-white rounded-md shadow-md overflow-hidden cursor-pointer" onClick={() => openPreviewModal(videoUrl)}>
+            <div key={index} className="bg-white rounded-md shadow-md overflow-hidden cursor-pointer relative"> {/* Added relative */}
               <video
                 src={videoUrl}
                 alt={`Video ${index}`}
                 className="w-full h-48 object-cover"
-                controls // Added video controls
+                controls
+                onClick={() => openPreviewModal(videoUrl)} // Make video clickable for preview
               />
-              <div className="p-3">
+              <div className="p-3 flex justify-between items-center"> {/* Flex container */}
                 <p className="text-sm text-gray-600 truncate">{videoUrl.split('/').pop()}</p>
+                <button
+                  onClick={() => handleDeleteVideo(videoUrl)}
+                  className="hover:text-red-500 focus:outline-none"
+                  aria-label={`Supprimer la vidéo ${videoUrl.split('/').pop()}`}
+                >
+                  <Trash className="h-4 w-4" />
+                </button>
               </div>
             </div>
           ))}
@@ -96,7 +129,7 @@ const Vidéos = () => {
               src={previewVideoUrl}
               alt="Video Preview"
               className="w-full max-h-[80vh] object-contain"
-              controls // Added video controls in modal
+              controls
             />
           </div>
         </div>

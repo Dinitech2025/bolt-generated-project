@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase';
-import { X, UploadCloud } from 'lucide-react'; // Import UploadCloud icon
-import ImageUploadForm from '../Forms/ImageUploadForm'; // Import ImageUploadForm
-import AddButton from '../components/AddButton'; // Import AddButton component
+import { X, UploadCloud, Trash } from 'lucide-react'; // Import Trash icon
+import ImageUploadForm from '../Forms/ImageUploadForm';
+import AddButton from '../components/AddButton';
 
 const Images = () => {
   const [images, setImages] = useState<string[]>([]);
-  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null); // State for preview modal
-  const [isUploadFormVisible, setIsUploadFormVisible] = useState(false); // State to control form visibility
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+  const [isUploadFormVisible, setIsUploadFormVisible] = useState(false);
 
   useEffect(() => {
     fetchImages();
@@ -50,8 +50,32 @@ const Images = () => {
   };
 
   const handleImageUploadSuccess = () => {
-    fetchImages(); // Refresh images after successful upload in modal
-    setIsUploadFormVisible(false); // Close the modal after upload
+    fetchImages();
+    setIsUploadFormVisible(false);
+  };
+
+  const handleDeleteImage = async (imageUrl: string) => {
+    const imageName = imageUrl.split('/').pop() || ''; // Extract filename from URL
+    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer l'image "${imageName}"?`)) {
+      return; // User cancelled deletion
+    }
+
+    try {
+      const { error } = await supabase.storage
+        .from('images')
+        .remove([imageName]); // Delete object using filename
+
+      if (error) {
+        console.error('Error deleting image:', error);
+        alert('Erreur lors de la suppression de l\'image.');
+      } else {
+        alert('Image supprimée avec succès!');
+        setImages(images.filter(imgUrl => imgUrl !== imageUrl)); // Update local state
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      alert('Erreur inattendue lors de la suppression de l\'image.');
+    }
   };
 
 
@@ -61,22 +85,29 @@ const Images = () => {
 
       {/* Add Image Button */}
       <div className="flex justify-end mb-4">
-        <AddButton onClick={handleOpenUploadForm} /> {/* Use AddButton component */}
+        <AddButton onClick={handleOpenUploadForm} />
       </div>
 
       {/* Image List */}
-      <div className="overflow-hidden max-h-[calc(100vh-180px)] overflow-y-auto"> {/* ADDED max-h and overflow-y-auto */}
-        {/* Subtitle Removed (already removed) */}
+      <div className="overflow-hidden max-h-[calc(100vh-180px)] overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((imageUrl, index) => (
-            <div key={index} className="bg-white rounded-md shadow-md overflow-hidden cursor-pointer" onClick={() => openPreviewModal(imageUrl)}>
+            <div key={index} className="bg-white rounded-md shadow-md overflow-hidden cursor-pointer relative"> {/* Added relative for positioning delete button */}
               <img
                 src={imageUrl}
                 alt={`Image ${index}`}
                 className="w-full h-48 object-cover"
+                onClick={() => openPreviewModal(imageUrl)} // Make image clickable for preview
               />
-              <div className="p-3">
+              <div className="p-3 flex justify-between items-center"> {/* Flex container for filename and delete icon */}
                 <p className="text-sm text-gray-600 truncate">{imageUrl.split('/').pop()}</p>
+                <button
+                  onClick={() => handleDeleteImage(imageUrl)}
+                  className="hover:text-red-500 focus:outline-none"
+                  aria-label={`Supprimer l'image ${imageUrl.split('/').pop()}`} // Aria label for accessibility
+                >
+                  <Trash className="h-4 w-4" /> {/* Delete icon */}
+                </button>
               </div>
             </div>
           ))}
