@@ -5,10 +5,11 @@ import Admin from './Admin/Admin';
 
 const App: React.FC = () => {
   const { user } = useAuth();
+  console.log("Current user in App:", user);
 
   return (
     <div className="App">
-      {user && (user.role === 'admin' || user.role === 'staff') ? (
+      {user && (user.role === 'admin' || user.role === 'staff') ? ( // Keep role check for now, adjust role logic later
         <Admin />
       ) : (
         <Store />

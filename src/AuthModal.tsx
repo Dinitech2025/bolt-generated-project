@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
-import { Shield, Users, User, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { z } from 'zod';
 
 interface AuthModalProps {
@@ -18,42 +18,26 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
     password: z.string().min(6),
   });
 
-  const handleSubmit = (e: React.FormEvent | null = null) => {
+  const handleSubmit = async (e: React.FormEvent | null = null) => {
     if (e) {
       e.preventDefault();
     }
 
     try {
       schema.parse({ email, password }); // Validate the form data
-      if (login(email, password)) {
-        onClose();
-      }
+      await login(email, password); // Call the async login function
+      onClose();
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // Display validation errors
+        // Display validation errors (you can add specific error messages here)
+        alert("Validation errors: " + error.errors.map(e => e.message).join(", "));
       } else {
         // Display other errors
+        alert("Login failed. Please check the console for details.");
       }
     }
   };
 
-  const handleAdminLogin = () => {
-    setEmail('admin@exemple.com');
-    setPassword('password');
-    handleSubmit();
-  };
-
-  const handleStaffLogin = () => {
-    setEmail('staff@exemple.com');
-    setPassword('password');
-    handleSubmit();
-  };
-
-  const handleClientLogin = () => {
-    setEmail('client@exemple.com');
-    setPassword('password');
-    handleSubmit();
-  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,35 +67,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
                 <X size={24} className="text-gray-600" />
               </button>
             </div>
-            <p className="text-lg text-gray-500 text-center mb-6">Connectez-vous à votre compte</p>
+            <p className="text-lg text-gray-500 text-center mb-6">Connectez-vous à votre compte Supabase</p>
 
-            <div className="flex justify-center space-x-6 mb-8">
-              <button
-                className="rounded-xl px-5 py-3 bg-blue-50 hover:bg-blue-100 focus:outline-none flex flex-col items-center border border-blue-200 transition-colors duration-200"
-                onClick={handleAdminLogin}
-              >
-                <Shield size={28} className="text-blue-700 mb-2" />
-                <span className="text-sm font-medium">Admin</span>
-              </button>
-              <button
-                className="rounded-xl px-5 py-3 bg-blue-50 hover:bg-blue-100 focus:outline-none flex flex-col items-center border border-blue-200 transition-colors duration-200"
-                onClick={handleStaffLogin}
-              >
-                <Users size={28} className="text-blue-700 mb-2" />
-                <span className="text-sm font-medium">Staff</span>
-              </button>
-              <button
-                className="rounded-xl px-5 py-3 bg-green-50 hover:bg-green-100 focus:outline-none flex flex-col items-center border border-green-200 transition-colors duration-200"
-                onClick={handleClientLogin}
-              >
-                <User size={28} className="text-green-700 mb-2" />
-                <span className="text-sm font-medium">Client</span>
-              </button>
-            </div>
-
-            <div className="border-b border-gray-300 w-full mb-6"></div>
-            <div className="text-center text-gray-500 mb-6">Ou</div>
-            <div className="border-b border-gray-300 w-full mb-6"></div>
 
             <div className="">
               <form onSubmit={handleFormSubmit}>
