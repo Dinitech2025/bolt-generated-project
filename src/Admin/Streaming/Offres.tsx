@@ -123,42 +123,52 @@ const Offres = () => {
         />
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {/* Table-row-like Responsive Layout */}
+      <div className="flex flex-col gap-4">
         {offres.map((offre) => (
-          <div key={offre.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            {offre.offre_image_url ? (
-              <img
-                src={offre.offre_image_url}
-                alt={offre.offre_name}
-                className="w-full h-48 object-cover"
-              />
-            ) : (
-              <div className="h-48 bg-gray-100 flex justify-center items-center">
-                <Tag className="text-gray-400 h-12 w-12" />
+          <div
+            key={offre.id}
+            className="bg-white shadow-md rounded-md p-4 flex md:flex-row flex-col items-center justify-between"
+          >
+            {/* Offer Image */}
+            <div className="flex items-center md:mb-0 mb-4 md:flex-row flex-col md:justify-between">
+              <div className="mr-4 md:mb-0 mb-2">
+                {offre.offre_image_url ? (
+                  <img
+                    src={offre.offre_image_url}
+                    alt={offre.offre_name}
+                    className="w-24 h-24 object-cover rounded-md"
+                  />
+                ) : (
+                  <div className="w-24 h-24 bg-gray-100 rounded-md flex justify-center items-center">
+                    <Tag className="text-gray-400 h-12 w-12" />
+                  </div>
+                )}
               </div>
-            )}
-            <div className="p-4">
-              <h3 className="font-semibold text-lg text-gray-800 truncate">{offre.offre_name}</h3>
-              <div className="flex items-center justify-between mt-3">
-                <span className="text-gray-700 font-medium">{offre.offre_price} Ar</span>
-                <span className="text-blue-500 text-sm">{offre.number_of_months} Mois</span>
+              <div className="md:flex md:items-center  md:text-left text-center">
+                <h2 className="text-lg font-semibold">{offre.offre_name}</h2>
+                <p className="text-gray-500 text-xs md:ml-4">
+                  <span className="text-sm">
+                    {offre.number_of_months} mois, {offre.offre_price} Ar
+                  </span>
+                </p>
               </div>
             </div>
-            <div className="px-4 py-3 bg-gray-50 flex flex-col justify-between">
-              <div className="flex justify-end space-x-2">
-                <button
-                  onClick={() => handleModifyOffre(offre.id)}
-                  className="text-blue-500 hover:text-blue-700 transition-colors duration-200"
-                >
-                  <Pencil className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => handleDeleteOffre(offre.id)}
-                  className="text-red-500 hover:text-red-700 transition-colors duration-200"
-                >
-                  <Trash className="h-5 w-5" />
-                </button>
-              </div>
+
+            {/* Actions */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => handleModifyOffre(offre.id)}
+                className="transition-all transform hover:scale-110 text-white font-bold py-2 px-4 rounded flex items-center"
+              >
+                <Pencil color="black" size={16} />
+              </button>
+              <button
+                onClick={() => handleDeleteOffre(offre.id)}
+                className="transition-all transform hover:scale-110 text-white font-bold py-2 px-4 rounded flex items-center"
+              >
+                <Trash color="red" size={16} />
+              </button>
             </div>
           </div>
         ))}

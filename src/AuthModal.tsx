@@ -42,19 +42,19 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose }) => {
 
   const handleAdminLogin = () => {
     setEmail('admin@exemple.com');
-    setPassword('password');
+    setPassword('password123');
     handleSubmit();
   };
 
   const handleStaffLogin = () => {
     setEmail('staff@exemple.com');
-    setPassword('password');
+    setPassword('password123');
     handleSubmit();
   };
 
   const handleClientLogin = () => {
     setEmail('client@exemple.com');
-    setPassword('password');
+    setPassword('password123');
     handleSubmit();
   };
 
