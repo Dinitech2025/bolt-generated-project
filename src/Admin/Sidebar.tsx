@@ -25,7 +25,9 @@ import {
   Database,
   Truck,
   Gift,
-  Cog
+  Cog,
+  Film, // Import Film icon
+  File as FileIcon // Import File icon and rename to FileIcon to avoid conflict with File type
 } from 'lucide-react';
 import { useAuth } from '../AuthContext';
 import SubMenu from './SubMenu';
@@ -116,8 +118,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const médiasItems = [
     { label: 'Images', page: 'Médias/Images', icon: Image },
-    { label: 'Vidéos', page: 'Médias/Vidéos', icon: Tv },
-    { label: 'Fichiers', page: 'Médias/Fichiers', icon: FileText },
+    { label: 'Vidéos', page: 'Médias/Vidéos', icon: Film }, // Changed to Film icon
+    { label: 'Fichiers', page: 'Médias/Fichiers', icon: FileIcon }, // Changed to FileIcon
   ];
 
   const rapportsItems = [

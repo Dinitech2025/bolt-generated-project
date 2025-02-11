@@ -57,7 +57,7 @@ const Images = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-semibold mb-4">Galerie d'images</h1> {/* Updated Page Title */}
+      <h1 className="text-2xl font-semibold mb-4">Galerie d'images</h1>
 
       {/* Add Image Button */}
       <div className="flex justify-end mb-4">
@@ -65,8 +65,8 @@ const Images = () => {
       </div>
 
       {/* Image List */}
-      <div>
-        {/* Removed Subtitle */}
+      <div className="overflow-hidden max-h-[calc(100vh-180px)] overflow-y-auto"> {/* ADDED max-h and overflow-y-auto */}
+        {/* Subtitle Removed (already removed) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((imageUrl, index) => (
             <div key={index} className="bg-white rounded-md shadow-md overflow-hidden cursor-pointer" onClick={() => openPreviewModal(imageUrl)}>
