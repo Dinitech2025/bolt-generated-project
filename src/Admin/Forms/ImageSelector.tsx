@@ -5,19 +5,25 @@ import ImageListModal from './ImageListModal';
 
 interface ImageSelectorProps {
   onImageSelect: (imageUrl: string) => void;
+  selectedImageUrl?: string | null; // Make selectedImageUrl prop optional
 }
 
-const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelect }) => {
+const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelect, selectedImageUrl: propSelectedImageUrl }) => {
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [images, setImages] = useState<string[]>([]);
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(propSelectedImageUrl || null); // Initialize from prop
   const [isImageListModalOpen, setIsImageListModalOpen] = useState(false);
 
   useEffect(() => {
     fetchImages();
   }, []);
+
+  useEffect(() => {
+    setSelectedImageUrl(propSelectedImageUrl || null); // Update local state when prop changes
+  }, [propSelectedImageUrl]);
+
 
   const fetchImages = async () => {
     try {
@@ -135,7 +141,7 @@ const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelect }) => {
       <div className="flex mb-4">
         {/* Selected Image Preview */}
         <div className="w-1/3 mr-4">
-          {selectedImageUrl && (
+          {selectedImageUrl && ( // Check if selectedImageUrl exists before rendering preview
             <div className="border rounded-md overflow-hidden">
               <img src={selectedImageUrl} alt="Selected Image" className="w-full h-32 object-cover" />
             </div>
